@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>dbController</title>
+		
+	</head>
+	<body>
+		<input type="text" class="url" placeholder="path">
+		<input type="text" class="value" placeholder="value">
+		<button class="send">publish</button>
+		<p class="preview">...</p>
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+  		import { getDatabase, get, set, update, ref, child } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+  		const url = document.querySelector('.url');
+  		const pathValue = document.querySelector('.value');
+  		const publish = document.querySelector('.send');
+  		const preview = document.querySelector('.preview')
+  		let firebaseConfig = ''
+  		await fetch("https://nubscript7.github.io/json-placeholder/firebase/config.json")
+  		.then(res=>res.json())
+  		.then(json=>firebaseConfig=json)
+  		const app = initializeApp(firebaseConfig)
+  		const db = getDatabase();
+  		console.log("loaded.")
+  		publish.addEventListener("click",()=>{
+  		if(url.value&&pathValue.value){
+  			update(ref(db,`${url.value}`),{value: pathValue.value})
+  			get(child(ref(db),`${url.value}`))
+  			.then(msg=>{
+  				preview.textContent = msg.val().value
+  			})
+  		};pathValue.value=''})
+		</script>
+	</body>
+</html>
